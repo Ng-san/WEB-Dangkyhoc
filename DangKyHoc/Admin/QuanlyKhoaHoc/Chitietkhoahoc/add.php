@@ -4,7 +4,7 @@
     // $user=[];
     $user = (isset($_SESSION['user'])? $user = $_SESSION['user']:[]);
 
-    $id=$MKH= $Monhoc= $Giangvien=$Lop=$Hocky=$Namhoc=$Syso=$Thoigian=$Diadiem='';
+    $id=$MKH= $Monhoc= $Giangvien=$Lop=$Hocky=$Namhoc=$Syso=$NgayBatDau=$NgayKetThuc=$Diadiem='';
     if (!empty($_POST)) {
         if (isset($_POST['MKH'])) {
             $MKH = $_POST['MKH'];
@@ -30,8 +30,11 @@
         if (isset($_POST['Syso'])) {
             $Syso = $_POST['Syso'];
         }
-        if (isset($_POST['Thoigian'])) {
-            $Thoigian = $_POST['Thoigian'];
+        if (isset($_POST['NgayBatDau'])) {
+            $NgayBatDau = $_POST['NgayBatDau'];
+        }
+        if (isset($_POST['NgayKetThuc'])) {
+            $NgayKetThuc = $_POST['NgayKetThuc'];
         }
         if (isset($_POST['Diadiem'])) {
             $Diadiem = $_POST['Diadiem'];
@@ -43,12 +46,12 @@
             // $created_at = $updated_at = date('Y-m-d H:s:i');
             //Luu vao database
             if ($id == '') {
-                $sql1 = 'insert into Chitietkhoahoc(MKH,id_Monhoc,id_Giangvien,id_Lop,id_Hocky,id_Namhoc,Syso,Thoigian,Diadiem) 
-                values ("'.$MKH.'","'.$id_Monhoc.'","'.$id_Giangvien.'","'.$id_Lop.'","'.$id_Hocky.'","'.$id_Namhoc.'","'.$Syso.'","'.$Thoigian.'","'.$Diadiem.'")';
+                $sql1 = 'insert into Chitietkhoahoc(MKH,id_Monhoc,id_Giangvien,id_Lop,id_Hocky,id_Namhoc,Syso,NgayBatDau,NgayKetThuc,Diadiem) 
+                values ("'.$MKH.'","'.$id_Monhoc.'","'.$id_Giangvien.'","'.$id_Lop.'","'.$id_Hocky.'","'.$id_Namhoc.'","'.$Syso.'","'.$NgayBatDau.'","'.$NgayKetThuc.'","'.$Diadiem.'")';
             } 
             else {
                 $sql1 = 'update Chitietkhoahoc set MKH ="'.$MKH.'",id_Monhoc ="'.$id_Monhoc.'",id_Giangvien ="'.$id_Giangvien.'",id_Lop ="'.$id_Lop.'",id_Hocky ="'.$id_Hocky.'"
-                ,id_Namhoc ="'.$id_Namhoc.'",Syso ="'.$Syso.'",Thoigian ="'.$Thoigian.'" ,Diadiem = "'.$Diadiem.'" where id = '.$id;
+                ,id_Namhoc ="'.$id_Namhoc.'",Syso ="'.$Syso.'",NgayBatDau ="'.$NgayBatDau.'",NgayKetThuc ="'.$NgayKetThuc.'",Diadiem = "'.$Diadiem.'" where id = '.$id;
                
             }
 
@@ -74,7 +77,8 @@
             $id_Hocky     = $chitiet['id_Hocky'];
             $id_Namhoc    = $chitiet['id_Namhoc'];
             $Syso         = $chitiet['Syso'];
-            $Thoigian     = $chitiet['Thoigian'];
+            $NgayBatDau   = $chitiet['NgayBatDau'];
+            $NgayKetThuc  = $chitiet['NgayKetThuc'];
             $Diadiem      = $chitiet['Diadiem'];
         }
     }
@@ -307,8 +311,12 @@
                                         <input required="true" type="number" class="form-control" id="syso" name="Syso" value="<?=$Syso?>">
                                     </div>
                                     <div class="form-group">
-                                        <label for="name">Thời gian:</label>
-                                        <input required="true" type="text" class="form-control" id="thoigian" name="Thoigian" value="<?=$Thoigian?>">
+                                        <label for="name">Ngày bắt đầu:</label>
+                                        <input required="true" type="date" class="form-control" id="NgayBatDau" name="NgayBatDau" value="<?=$NgayBatDau?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Ngày kết thúc:</label>
+                                        <input required="true" type="date" class="form-control" id="NgayKetThuc" name="NgayKetThuc" value="<?=$NgayKetThuc?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="name">Địa điểm:</label>

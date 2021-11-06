@@ -13,7 +13,93 @@
             // echo($data['id']);
         }
     }
-    
+    else{
+        header('location: ../../Login.php');
+    }
+    $tab_menu=$tab_content='';
+    $query1='select * from Chitietkhoahoc where Chitietkhoahoc.id_Giangvien="'.$data['id'].'" Order by Chitietkhoahoc.id ASC'; 
+    $List = executeResult($query1);
+    $count=0;
+    foreach($List as $item1){
+        $sqll='select * from Monhoc where id='.$item1['id_Monhoc'];
+        $chitiet = executeSingleResult($sqll);
+        if ($chitiet != null) {
+            $Tenmonhoc   = $chitiet['Tenmonhoc'];
+            if($count==0)
+            {
+                // <h2 class="text-center" style="color:#3289a8;font-family:Time New Roman;padding-top:15px;">'.$chitiet['Tenmonhoc'].'</h2>
+                $tab_menu .='
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#'.$chitiet['Tenmonhoc'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].' </a>
+                    </li>';
+                $tab_content .='<div id="'.$chitiet['Tenmonhoc'].'" class="container tab-pane active"><br>
+                                    <table class="table table-bordered table-hover table-responsive" >
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên sinh viên</th>
+                                                <th>MSV</th>
+                                                <th>Lớp</th>
+                                                <th>Khoá</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody>';
+            }
+            else{
+                $tab_menu .='
+                    <li class="nav-item">
+                        <a class="nav-link " href="#'.$chitiet['Tenmonhoc'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].'</a>
+                    </li>';
+                $tab_content .='<div id="'.$chitiet['Tenmonhoc'].'" class="tab-pane container fade"><br>                                  
+                                    <table class="table table-bordered table-hover table-responsive" >
+                                        <thead>
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>Tên sinh viên</th>
+                                                <th>MSV</th>
+                                                <th>Lớp</th>
+                                                <th>Khoá</th>
+                                            </tr>
+                                        </thead>
+                                    <tbody>';
+                // echo($count);
+            }
+
+            $qr='select * from Chitietkhoahoc,Monhoc,Ketquadangky where Chitietkhoahoc.id_Monhoc = Monhoc.id and Ketquadangky.id_Chitietkhoahoc=Chitietkhoahoc.id 
+            and Chitietkhoahoc.id_Giangvien="'.$data['id'].'" and Monhoc.Tenmonhoc="'.$chitiet['Tenmonhoc'].'"'; 
+
+            $List1 = executeResult($qr);
+            $index=1;
+            foreach($List1 as $item1){
+                $sql='select * from Sinhvien where id='.$item1['id_sv'];
+                $chitiet = executeSingleResult($sql);
+                if ($chitiet != null) {
+                    $Tensinhvien = $chitiet['Hovaten'];
+                    $MSV         = $chitiet['MSV'];
+                    $Khoa        = $chitiet['Doituong'];
+                }
+
+                $sql2='select * from Lop where id='.$item1['id_Lop'];
+                $chitiet2 = executeSingleResult($sql2);
+                if ($chitiet2 != null) {
+                    $Tenlop   = $chitiet2['Tenlop'];
+                }
+                $tab_content .=
+                            '<tr>
+                                <td >'.($index++).'</td>
+                                <td >'.$Tensinhvien.'</td>
+                                <td >'.$MSV.'</td>
+                                <td >'.$Tenlop.'</td>
+                                <td >'.$Khoa.'</td>
+                            </tr>';
+            }
+        }
+        $count++;
+        $tab_content .='  
+                </tbody>
+            </table>
+        </div>';
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,7 +167,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link px-0 align-middle" data-bs-toggle="tooltip" data-bs-placement="right" title="Danh sách sinh viên">
+                                    <a href="Danhsachsinhvien.php" class="nav-link px-0 align-middle" data-bs-toggle="tooltip" data-bs-placement="right" title="Danh sách sinh viên">
                                         <i class="bi bi-card-checklist icon-nav"></i> <span class="ms-1">Danh sách sinh viên</span> 
                                     </a>
                                 </li>
@@ -95,52 +181,34 @@
                     </div>
                 </div>
                 <div class="col py-3">
-                    <div class="panel-heading">
-                        <h2 class="text-center" style="color:#3289a8;font-family:Time New Roman">DANH SÁCH SINH VIÊN</h2>
-                    </div>
                     <div class="panel-body">
-                        <table class="table table-bordered table-hover table-responsive" >
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tên sinh viên</th>
-                                    <th>MSV</th>
-                                    <th>Lớp</th>
-                                    <th>Khoá</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                                    $query='select * from Khoahoc,Chitietkhoahoc,Ketquadangky where 
-                                    Khoahoc.MKH=Chitietkhoahoc.MKH and Chitietkhoahoc.id = Ketquadangky.id_Chitietkhoahoc and Chitietkhoahoc.id_Giangvien='.$data['id']; 
-                                    // echo($sql1);
-                                    $List = executeResult($query);
-                                    $index=1;
-                                    foreach($List as $item){
-                                        $sql='select * from Sinhvien where id='.$item['id_sv'];
-                                        $chitiet = executeSingleResult($sql);
-                                        if ($chitiet != null) {
-                                            $Tensinhvien = $chitiet['Hovaten'];
-                                            $MSV         = $chitiet['MSV'];
-                                            $Khoa        = $chitiet['Doituong'];
-                                        }
-
-                                        $sql2='select * from Lop where id='.$item['id_Lop'];
-                                        $chitiet2 = executeSingleResult($sql2);
-                                        if ($chitiet2 != null) {
-                                            $Tenlop   = $chitiet2['Tenlop'];
-                                        }
-                                        echo'<tr>
-                                                <td >'.($index++).'</td>
-                                                <td >'.$Tensinhvien.'</td>
-                                                <td >'.$MSV.'</td>
-                                                <td >'.$Tenlop.'</td>
-                                                <td >'.$Khoa.'</td>
-                                            </tr>';
-                                    }
-                                ?>
-                            </tbody>
-                        </table>
+                        <div class="container mt-3">
+                        <!-- <br> -->
+                        <div class="panel-heading">
+                            <h2 class="text-center" style="color:#3289a8;font-family:Time New Roman;padding-top:15px;">DANH SÁCH SINH VIÊN</h2>
+                        </div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <?php echo $tab_menu; ?>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- <div id="" class="container tab-pane active"><br> -->
+                                <!-- <table class="table table-bordered table-hover table-responsive" >
+                                    <thead>
+                                        <tr>
+                                            <th>STT</th>
+                                            <th>Tên sinh viên</th>
+                                            <th>MSV</th>
+                                            <th>Lớp</th>
+                                            <th>Khoá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody> -->
+                            <?php echo $tab_content;?> 
+                            
+                            
+                        </div>
+                                    
+                        </div>
                     </div>
                 </div>
             </div>

@@ -169,7 +169,7 @@
                                                         <td >'.$Tenhocky.'</td>
                                                         <td >'.$Tennamhoc.'</td>
                                                         <td >'.$item['Syso'].'</td>
-                                                        <td >'.$item['Thoigian'].'</td>
+                                                        <td >'.$item['NgayBatDau'].'->'.$item['NgayKetThuc'].'</td>
                                                         <td >'.$item['Diadiem'].'</td>
                                                         <td>
                                                             <a href="add.php?id='.$item['id'].'"><button class="btn btn-warning">Sửa</button></a>

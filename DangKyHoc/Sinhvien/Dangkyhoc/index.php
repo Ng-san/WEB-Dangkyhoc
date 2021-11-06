@@ -13,6 +13,7 @@
             $_SESSION['data']= $data;
         }
     }
+    $GetToday = date('Y-m-d H:s:i');
     // echo($user['id']);
 ?>
 <!DOCTYPE html>
@@ -130,9 +131,9 @@
                                         '.$MSV.' - '.$Tensinhvien.' - Khoa '.$Khoa.' - '.$Doituong.'';
                                     }
                                     echo'<h2 class="text-center" style="color:#3289a8;font-family:Time New Roman">DANH SÁCH LỚP HỌC PHẦN CÓ THỂ ĐĂNG KÝ</h2>';
-                            
+                                    
                                     $query='select * from Sinhvien,Khoahoc,Chitietkhoahoc where 
-                                    Khoahoc.Trangthai="Mở" and Khoahoc.MKH=Chitietkhoahoc.MKH and Sinhvien.id='.$id_user;
+                                    Khoahoc.MKH=Chitietkhoahoc.MKH and Sinhvien.id="'.$id_user.'" and Khoahoc.NgayDangKy <="'.$GetToday.'" and Khoahoc.HanDangKy >="'.$GetToday.'"';
                                     $row = executeSingleResult($query);
                                     if ($row != null) {
                                         $NgayDangKy = $row['NgayDangKy'];
@@ -149,6 +150,7 @@
                                     // $tongtc = (isset($_SESSION['Tinchi'])? $tongtc = $_SESSION['Tinchi']:[]);
                                     // echo'<h5 class="text-end" style="font-family:Time New Roman";padding-bottom:20px;>Bạn đã đăng ký: '.$tongtc.' TC</h5>'; 
                                 ?>
+                                <!-- <?php echo(date('Y-m-d H:s:i')); ?> -->
                             </div>
                             <div class="panel-body">
                                 <table class="table table-bordered table-hover table-responsive" >
@@ -176,8 +178,11 @@
                                             // $sql1='select * from Khoahoc
                                             // inner join Chitietkhoahoc On Khoahoc.MKH=Chitietkhoahoc.MKH
                                             // where Khoahoc.Trangthai="Mở"';
+                                            // $sql1='select * from Khoahoc,Chitietkhoahoc where 
+                                            // Khoahoc.Trangthai="Mở" and Khoahoc.MKH=Chitietkhoahoc.MKH ';
+                                            
                                             $sql1='select * from Khoahoc,Chitietkhoahoc where 
-                                            Khoahoc.Trangthai="Mở" and Khoahoc.MKH=Chitietkhoahoc.MKH ';
+                                            Khoahoc.MKH=Chitietkhoahoc.MKH and Khoahoc.NgayDangKy <="'.$GetToday.'" and Khoahoc.HanDangKy >="'.$GetToday.'"';
                                             $monhocList = executeResult($sql1);
                                             $index=1;
                                             foreach($monhocList as $item){
@@ -216,13 +221,24 @@
                                                         <td >'.$Tenhocky.'</td>
                                                         <td >'.$Tennamhoc.'</td>
                                                         <td >'.$item['Syso'].'</td>
-                                                        <td >'.$item['Thoigian'].'</td>
+                                                        <td >Từ '.$item['NgayBatDau'].' đến '.$item['NgayKetThuc'].'</td>
                                                         <td >'.$item['Diadiem'].'</td>
                                                         <td >'.$Sotinchi.'</td>
-                                                        <td >'.$Hocphi.'</td>
-                                                        <td>
-                                                            <button class="btn btn-success" onclick="Dangky('.$item['id'].')">Đăng Ký</button>
-                                                        </td>
+                                                        <td >'.$Hocphi.'</td>';
+                                                    echo'
+                                                        <td>';
+                                                        $id_ctkh= $item['id'];
+                                                        // echo($id_ctkh);
+                                                        $query1='select * from Chitietkhoahoc,Ketquadangky where 
+                                                        Ketquadangky.id_sv ="'.$id_user.'" and Ketquadangky.id_Chitietkhoahoc="'.$id_ctkh.'"';
+                                                        $rs = executeSingleResult($query1);
+                                                        if ($rs != null) {
+                                                            echo'<button class="btn btn-warning">Đã Đăng Ký</button>';
+                                                        }
+                                                        else{
+                                                            echo'<button class="btn btn-success" onclick="Dangky('.$item['id'].')">Đăng Ký</button>';
+                                                        }
+                                                        echo'</td>
                                                     </tr>';
                                             }
                                             // echo($item['id']);
@@ -260,7 +276,8 @@
                                         <?php 
                                             $tonghocphi=$tongtinchi=0;
                                             $sql1='select * from Khoahoc,Chitietkhoahoc,Ketquadangky where 
-                                            Khoahoc.MKH=Chitietkhoahoc.MKH and Chitietkhoahoc.id=Ketquadangky.id_Chitietkhoahoc and Ketquadangky.id_sv ='.$id_user;
+                                            Khoahoc.MKH=Chitietkhoahoc.MKH and Chitietkhoahoc.id=Ketquadangky.id_Chitietkhoahoc and Ketquadangky.id_sv ="'.$id_user.'"
+                                            and Chitietkhoahoc.NgayKetThuc > "'.$GetToday.'"';
                                             // echo($sql1);
                                             $monhocList = executeResult($sql1);
                                             $index=1;
@@ -295,6 +312,7 @@
 
                                                 $tonghocphi +=$Hocphi;
                                                 $tongtinchi +=$Sotinchi;
+
                                                 echo'<tr>
                                                         <td >'.($index++).'</td>
                                                         <td >'.$Tenmonhoc.'</td>
@@ -303,13 +321,13 @@
                                                         <td >'.$Tenhocky.'</td>
                                                         <td >'.$Tennamhoc.'</td>
                                                         <td >'.$item['Syso'].'</td>
-                                                        <td >'.$item['Thoigian'].'</td>
+                                                        <td >Từ '.$item['NgayBatDau'].' đến '.$item['NgayKetThuc'].'</td>
                                                         <td >'.$item['Diadiem'].'</td>
                                                         <td >'.$Sotinchi.'</td>
                                                         <td >'.$Hocphi.'</td>';
                                                         
                                                     
-                                                if($item['Trangthai']=='Mở')
+                                                if($item['NgayDangKy'] <= date('Y-m-d H:s:i') && $item['HanDangKy'] >= date('Y-m-d H:s:i'))
                                                 {
                                                     echo'<td> <button class="btn btn-danger" onclick="Huydangky('.$item['id_dk'].')">Huỷ</button></td>';
                                                 }

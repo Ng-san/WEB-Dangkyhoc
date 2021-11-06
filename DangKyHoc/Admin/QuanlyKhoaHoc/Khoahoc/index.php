@@ -120,7 +120,6 @@
                                             <th>Tên khoá học</th>
                                             <th>Ngày đăng ký</th>
                                             <th>Hạn đăng ký</th>
-                                            <th>Trạng thái</th>
                                             <th width="40px"></th>
                                             <th width="40px"></th>
                                         </tr>
@@ -137,7 +136,6 @@
                                                         <td >'.$item['Tenkhoahoc'].'</td>
                                                         <td >'.$item['NgayDangKy'].'</td>
                                                         <td >'.$item['HanDangKy'].'</td>
-                                                        <td >'.$item['Trangthai'].'</td>
                                                         <td>
                                                             <a href="add.php?id='.$item['MKH'].'"><button class="btn btn-warning">Sửa</button></a>
                                                         </td>

@@ -144,7 +144,7 @@
                                                         <td >'.$item['Hocphi'].'</td>
                                                         <td >'.$tenkhoa.'</td>
                                                         <td>
-                                                            <a href="add.php?id='.$item['id'].'"><button class="btn btn-warning">Sửa</button></a>
+                                                            <a href="edit.php?id='.$item['id'].'"><button class="btn btn-warning">Sửa</button></a>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-danger" onclick="deletemonhoc('.$item['id'].')">Xoá</button>
