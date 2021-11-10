@@ -14,7 +14,7 @@
         }
     }
     $GetToday = date('Y-m-d H:s:i');
-    // echo($user['id']);
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,11 +138,11 @@
                                     if ($row != null) {
                                         $NgayDangKy = $row['NgayDangKy'];
                                         $HanDangKy  = $row['HanDangKy'];
-                                        echo'<h4 class="text-center" style="padding-bottom:40px;font-family:Time New Roman;color:black">
+                                        echo'<h4 class="text-center" style="padding-bottom:25px;font-family:Time New Roman;color:black">
                                         Hạn đăng ký: '.$NgayDangKy.' --> '.$HanDangKy.'</h4>';
                                     }
                                     else{
-                                        echo'<h4 class="text-center" style="padding-bottom:40px;font-family:Time New Roman;color:black">
+                                        echo'<h4 class="text-center" style="padding-bottom:25px;font-family:Time New Roman;color:black">
                                         Bạn chưa được phân công khoá học nào !</h4>';
                                     }
                                    
@@ -153,6 +153,13 @@
                                 <!-- <?php echo(date('Y-m-d H:s:i')); ?> -->
                             </div>
                             <div class="panel-body">
+                                <div class="row">
+                                    <form method="get" style="padding-bottom:10px">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Seaching..." id="s" name="s" onkeyup="search(this.value)">
+                                        </div>
+                                    </form>
+                                </div>
                                 <table class="table table-bordered table-hover table-responsive" >
                                     <thead>
                                         <tr>
@@ -170,19 +177,37 @@
                                             <th width="40px"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tablesearch">
                                         <?php 
                                             $data = (isset($_SESSION['data'])? $data = $_SESSION['data']:[]);
                                             $id_user = $data['id'];
-                                            // echo($id_user);
-                                            // $sql1='select * from Khoahoc
-                                            // inner join Chitietkhoahoc On Khoahoc.MKH=Chitietkhoahoc.MKH
-                                            // where Khoahoc.Trangthai="Mở"';
-                                            // $sql1='select * from Khoahoc,Chitietkhoahoc where 
-                                            // Khoahoc.Trangthai="Mở" and Khoahoc.MKH=Chitietkhoahoc.MKH ';
+
+                                            $s='';
+                                            if(isset($_GET['s']))
+                                            {
+                                                $s = $_GET['s'];
+                                            }
+                                            $newsql='';
+                                            if(!empty($s))
+                                            {
+                                                $searchId='select id from Monhoc where Tenmonhoc="'.$s.'"';
+                                                // echo($searchId);
+                                                $Infor = executeSingleResult($searchId);
+                                                if($Infor!=null)
+                                                {
+                                                    $newsql='and Chitietkhoahoc.id_Monhoc like "%'.$Infor['id'].'%"';
+                                                    // echo($newsql);
+                                                }
+                                            }
+                                            $query1='select CTKH.id_Monhoc,CTKH.id_Lop from Chitietkhoahoc as CTKH 
+                                                    INNER Join Ketquadangky as KQDK ON KQDK.id_Chitietkhoahoc = CTKH.id
+                                                    INNER JOIN Sinhvien as SV ON KQDK.id_sv = SV.id WHERE SV.id="'.$id_user.'"';
                                             
+                                            $arrayMonhoc = executeResult($query1);
+
                                             $sql1='select * from Khoahoc,Chitietkhoahoc where 
-                                            Khoahoc.MKH=Chitietkhoahoc.MKH and Khoahoc.NgayDangKy <="'.$GetToday.'" and Khoahoc.HanDangKy >="'.$GetToday.'"';
+                                            Khoahoc.MKH=Chitietkhoahoc.MKH '.$newsql.' and Khoahoc.NgayDangKy <="'.$GetToday.'" and Khoahoc.HanDangKy >="'.$GetToday.'"';
+                                            // echo($sql1);
                                             $monhocList = executeResult($sql1);
                                             $index=1;
                                             foreach($monhocList as $item){
@@ -229,15 +254,45 @@
                                                         <td>';
                                                         $id_ctkh= $item['id'];
                                                         // echo($id_ctkh);
-                                                        $query1='select * from Chitietkhoahoc,Ketquadangky where 
-                                                        Ketquadangky.id_sv ="'.$id_user.'" and Ketquadangky.id_Chitietkhoahoc="'.$id_ctkh.'"';
-                                                        $rs = executeSingleResult($query1);
-                                                        if ($rs != null) {
-                                                            echo'<button class="btn btn-warning">Đã Đăng Ký</button>';
+                                                        // $query1='select * from Chitietkhoahoc,Ketquadangky where 
+                                                        // Ketquadangky.id_sv ="'.$id_user.'" and Ketquadangky.id_Chitietkhoahoc="'.$id_ctkh.'"';
+                                                        // echo $arrayMonhoc;
+                                                        $check=false;
+                                                        $checkLop=false;
+                                                        foreach($arrayMonhoc as $monhoc)
+                                                        {
+                                                            if ($item['id_Monhoc'] == $monhoc['id_Monhoc'] )
+                                                            {
+                                                                $check=true;
+                                                                if($item['id_Lop'] == $monhoc['id_Lop'])
+                                                                {
+                                                                    $checkLop=true;
+                                                                }
+                                                                
+                                                            }
                                                         }
-                                                        else{
-                                                            echo'<button class="btn btn-success" onclick="Dangky('.$item['id'].')">Đăng Ký</button>';
-                                                        }
+                                                        // echo $item['id_Monhoc'];
+                                                        // $rs = executeSingleResult($query1);
+                                                        // if ($rs != null) {
+                                                        //     echo'<button class="btn btn-warning">Đã Đăng Ký</button>';
+                                                        // }
+                                                        // else{                                                           
+                                                            if ($check)
+                                                            {
+                                                                if($checkLop)
+                                                                {
+                                                                    echo'<button class="btn btn-warning">Đã Đăng Ký</button>';
+                                                                }else{
+                                                                    echo'<button class="btn btn-danger">X</button>';
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                echo'<button class="btn btn-success" onclick="Dangky('.$item['id'].')">Đăng Ký</button>';
+                                                            }
+                                                            
+                                                            
+                                                        // }
                                                         echo'</td>
                                                     </tr>';
                                             }
@@ -272,8 +327,9 @@
                                             <th width="40px"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody >
                                         <?php 
+
                                             $tonghocphi=$tongtinchi=0;
                                             $sql1='select * from Khoahoc,Chitietkhoahoc,Ketquadangky where 
                                             Khoahoc.MKH=Chitietkhoahoc.MKH and Chitietkhoahoc.id=Ketquadangky.id_Chitietkhoahoc and Ketquadangky.id_sv ="'.$id_user.'"
@@ -329,7 +385,7 @@
                                                     
                                                 if($item['NgayDangKy'] <= date('Y-m-d H:s:i') && $item['HanDangKy'] >= date('Y-m-d H:s:i'))
                                                 {
-                                                    echo'<td> <button class="btn btn-danger" onclick="Huydangky('.$item['id_dk'].')">Huỷ</button></td>';
+                                                    echo'<td> <button class="btn btn-primary" onclick="Huydangky('.$item['id_dk'].')">Huỷ</button></td>';
                                                 }
                                                 else{
                                                     echo'<td></td></tr>';
@@ -393,6 +449,18 @@
                     location.reload()
                 })
             }
+            // function search(value)
+            // {
+            //     $.post('ajax.php',
+            //     {
+            //         'value': value,
+            //         'action': 'search'
+            //     },function(data)
+            //     {
+            //         $('#tablesearch').html(data);
+                    
+            //     })
+            // }
         </script>
     </body>
     <footer class="text-center text-white" style="background-color: #2b3643;">

@@ -18,21 +18,26 @@
     }
     $tab_menu=$tab_content='';
     $query1='select * from Chitietkhoahoc where Chitietkhoahoc.id_Giangvien="'.$data['id'].'" Order by Chitietkhoahoc.id ASC'; 
-    $List = executeResult($query1);
+    $rs=Result($query1);
+    // $List = executeResult($query1);
     $count=0;
-    foreach($List as $item1){
-        $sqll='select * from Monhoc where id='.$item1['id_Monhoc'];
+    while($rows =mysqli_fetch_array($rs))
+    {
+        // echo($rows);
+    // foreach($List as $item1){
+        $sqll='select * from Monhoc where id='.$rows['id_Monhoc'];
         $chitiet = executeSingleResult($sqll);
+        //  echo($chitiet);
+
         if ($chitiet != null) {
             $Tenmonhoc   = $chitiet['Tenmonhoc'];
             if($count==0)
             {
-                // <h2 class="text-center" style="color:#3289a8;font-family:Time New Roman;padding-top:15px;">'.$chitiet['Tenmonhoc'].'</h2>
                 $tab_menu .='
                     <li class="nav-item">
-                        <a class="nav-link active" href="#'.$chitiet['Tenmonhoc'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].' </a>
+                        <a class="nav-link active" href="#Menu'.$chitiet['id'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].' </a>
                     </li>';
-                $tab_content .='<div id="'.$chitiet['Tenmonhoc'].'" class="container tab-pane active"><br>
+                $tab_content .='<div id="Menu'.$chitiet['id'].'" class="container tab-pane active"><br>
                                     <table class="table table-bordered table-hover table-responsive" >
                                         <thead>
                                             <tr>
@@ -48,27 +53,30 @@
             else{
                 $tab_menu .='
                     <li class="nav-item">
-                        <a class="nav-link " href="#'.$chitiet['Tenmonhoc'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].'</a>
+                        <a class="nav-link " href="#Menu'.$chitiet['id'].'" data-bs-toggle="tab" >'.$chitiet['Tenmonhoc'].'</a>
                     </li>';
-                $tab_content .='<div id="'.$chitiet['Tenmonhoc'].'" class="tab-pane container fade"><br>                                  
-                                    <table class="table table-bordered table-hover table-responsive" >
-                                        <thead>
-                                            <tr>
-                                                <th>STT</th>
-                                                <th>Tên sinh viên</th>
-                                                <th>MSV</th>
-                                                <th>Lớp</th>
-                                                <th>Khoá</th>
-                                            </tr>
-                                        </thead>
-                                    <tbody>';
-                // echo($count);
+                $tab_content .='<div id="Menu'.$chitiet['id'].'" class="tab-pane container fade"><br>
+                                <table class="table table-bordered table-hover table-responsive" >
+                                                        <thead>
+                                                            <tr>
+                                                                <th>STT</th>
+                                                                <th>Tên sinh viên</th>
+                                                                <th>MSV</th>
+                                                                <th>Lớp</th>
+                                                                <th>Khoá</th>
+                                                            </tr>
+                                                        </thead>
+                                                    <tbody>';                                
+
             }
 
             $qr='select * from Chitietkhoahoc,Monhoc,Ketquadangky where Chitietkhoahoc.id_Monhoc = Monhoc.id and Ketquadangky.id_Chitietkhoahoc=Chitietkhoahoc.id 
             and Chitietkhoahoc.id_Giangvien="'.$data['id'].'" and Monhoc.Tenmonhoc="'.$chitiet['Tenmonhoc'].'"'; 
+            // echo($qr);
 
+            $rs1=Result($qr);
             $List1 = executeResult($qr);
+            // echo($List1);
             $index=1;
             foreach($List1 as $item1){
                 $sql='select * from Sinhvien where id='.$item1['id_sv'];
@@ -108,7 +116,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
         <link rel="stylesheet" href="../../Assets/Css/main.css">
     </head>
@@ -191,21 +199,7 @@
                             <?php echo $tab_menu; ?>
                         </ul>
                         <div class="tab-content">
-                            <!-- <div id="" class="container tab-pane active"><br> -->
-                                <!-- <table class="table table-bordered table-hover table-responsive" >
-                                    <thead>
-                                        <tr>
-                                            <th>STT</th>
-                                            <th>Tên sinh viên</th>
-                                            <th>MSV</th>
-                                            <th>Lớp</th>
-                                            <th>Khoá</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody> -->
                             <?php echo $tab_content;?> 
-                            
-                            
                         </div>
                                     
                         </div>

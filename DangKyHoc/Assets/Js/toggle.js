@@ -15,15 +15,6 @@ document.getElementById('show').onclick=function(){
      
 }
 
-// var tooltip =document.querySelectorAll('.ms-1');
-// for(let i=0;i<tooltip.length;i++){
-    // if(tooltip[i].style.display == ""){
-        // var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        // var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        // return new bootstrap.Tooltip(tooltipTriggerEl)
-        // })
-    // }
-// }
 if(sideBar.style.width < x)
 {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))

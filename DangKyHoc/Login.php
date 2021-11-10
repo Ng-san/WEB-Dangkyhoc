@@ -32,9 +32,7 @@
     else{
       echo "<script>alert('Username không tồn tại');</script>";
     }
-
-    
-  }
+}
 ?> 
 <!DOCTYPE html>
 <html>

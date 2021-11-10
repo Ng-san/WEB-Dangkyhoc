@@ -29,17 +29,15 @@ function executeResult($sql) {
 
 	return $data;
 }
-// function Result($sql)
-// {
-// 	//save data into table
-// 	// open connection to database
-// 	$con = mysqli_connect('localhost', 'root','', 'Dangkyhoc');
-// 	//insert, update, delete
-// 	$result = mysqli_query($con, $sql);
-// 	mysqli_close($con);
 
-// 	return $result;
-// }
+function Result($sql)
+{
+	$con = mysqli_connect('localhost', 'root','', 'Dangkyhoc');
+	//insert, update, delete
+	$result = mysqli_query($con, $sql);
+	// mysqli_close($con);
+	return $result;
+}
 
 function executeSingleResult($sql) {
 	//save data into table
@@ -48,8 +46,11 @@ function executeSingleResult($sql) {
 	$con = mysqli_connect('localhost', 'root','', 'Dangkyhoc');
 	//insert, update, delete
 	$result = mysqli_query($con, $sql);
-	$row    = mysqli_fetch_array($result, 1);
-
+	$row=null;
+	if($result !=null)
+	{
+		$row    = mysqli_fetch_array($result, 1);
+	}
 	//close connection
 	mysqli_close($con);
 

@@ -25,7 +25,7 @@ if (!empty($_POST)) {
 					if(isset($user['username'])){
 						$sql = 'insert into Ketquadangky(id_sv,id_Chitietkhoahoc) 
 						values ("'.$id_sv.'","'.$id.'")';
-						// echo($sql);
+						
 					}
 					execute($sql);
 				}
