@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 06, 2021 lúc 06:12 AM
+-- Thời gian đã tạo: Th10 10, 2021 lúc 08:49 AM
 -- Phiên bản máy phục vụ: 10.4.17-MariaDB
 -- Phiên bản PHP: 7.4.12
 
@@ -140,9 +140,8 @@ CREATE TABLE `Ketquadangky` (
 
 INSERT INTO `Ketquadangky` (`id_dk`, `id_sv`, `id_Chitietkhoahoc`) VALUES
 (54, 45, 17),
-(80, 44, 18),
 (81, 44, 17),
-(82, 44, 21);
+(84, 44, 18);
 
 -- --------------------------------------------------------
 
@@ -394,7 +393,7 @@ ALTER TABLE `Hocky`
 -- AUTO_INCREMENT cho bảng `Ketquadangky`
 --
 ALTER TABLE `Ketquadangky`
-  MODIFY `id_dk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `id_dk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT cho bảng `Khoa`
